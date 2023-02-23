@@ -1,86 +1,56 @@
-class TicketManager {
-    #baseProfit;
+//Desafio 1
+class ProductMannager {
+    static id = 1
 
     constructor() {
-    this.events = [];
-    this.#baseProfit = 0.15;
+        this.products = []
     }
 
-    getEvents = () => {
-    console.log(this.events);
-    return;
-    };
+    addProduct(title, description, price, thumbnail, code, stock) {
 
-    createEvent = (name, place, price, capacity, date) => {
-    const event = {
-        id: this.events.length + 1,
-        name,
-        place,
-        price: price + this.#baseProfit,
-        capacity: capacity ?? 50,
-        date: date ?? this.#formatDate(),
-        participants: [],
-    };
+        const product = ({
+            title: title,
+            description: description,
+            price: price,
+            thumbnail: thumbnail,
+            code: code,
+            stock: stock,
+            id: ProductMannager.id
+        })
 
-    this.events.push(event);
-    };
+        const chekCode = this.products.find(e => e.code === product.code)
 
-    addParticipant = (eventId, participantId) => {
-    const eventIndex = this.events.findIndex((event) => event.id === eventId);
-
-    if (eventIndex === -1) {
-        console.log("This event does not exist");
-        return;
+        if (chekCode != undefined) {
+            return console.log('error, uno de los productos tiene el code repetido')
+        } else if (!product.title || !product.description || !product.price || !product.thumbnail || !product.code || !product.stock) {
+            return console.log('uno de los productos tiene campos incompletos')
+        } else {
+            this.products.push(product)
+            ProductMannager.id++
+        }
     }
 
-    const participantExists =
-        this.events[eventIndex].participants.includes(participantId);
-
-    if (participantExists) {
-        console.log("The user has already singed up for this event!");
-        return;
+    getProducts() {
+        return console.log(this.products)
     }
 
-    this.events[eventIndex].participants.push(participantId);
-    };
+    getProductsById(id) {
+        const busqueda = this.products.find(e => e.id === id)
 
-    rescheduleEvent = (eventId, newPlace, newDate) => {
-    const event = this.events.find((event) => event.id === eventId);
-
-    if (!event) {
-        console.log("Event not found");
-        return;
+        if(busqueda != undefined) {
+            console.log('Producto encontrado', busqueda)
+        } else {
+            console.log('Product not found')
+        }
     }
-
-    const newEvent = {
-        ...event,
-        id: this.events.length + 1,
-        place: newPlace,
-        date: newDate,
-        participants: [],
-    };
-
-    this.events.push(newEvent);
-    return;
-    };
-
-    #formatDate = () => {
-    const date = new Date();
-
-    const day = date.getDay();
-    const month = date.getMonth();
-    const year = date.getFullYear();
-
-    return `${day}/${month}/${year}`;
-    };
 }
 
-const ticketManager = new TicketManager();
+const newProduct = new ProductMannager()
 
-ticketManager.createEvent("Dev Fest", "Buenos Aires", 150, 100, "30/03/2023");
-ticketManager.createEvent("Comicon", "Lima", 90);
+newProduct.addProduct('batoque acro', 'impreso en 3D', 80, 'imgRoute', 1243, 15)
+newProduct.addProduct("Pica2", "Parapente homologado EN-A", 20000, "imgRoute", 1245, 1)
+newProduct.getProducts()
 
-ticketManager.addParticipant(1, 1);
+newProduct.getProductsById(1)
 
-ticketManager.rescheduleEvent(1, "Santiado", "30/06/2023");
-ticketManager.getEvents();
+module.exports = ProductMannager
